@@ -1,4 +1,4 @@
-#Compare degree 2 and degree 15 models
+#Select a suitable polynomial degree
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -10,20 +10,17 @@ from sklearn.metrics import mean_squared_error
 
 np.random.seed(42)
 
-X = np.linspace(0, 1, 40).reshape(-1, 1)
-y = np.sin(2 * np.pi * X).ravel()
-y += np.random.normal(0, 0.15, len(X))
+X = np.linspace(0, 10, 60).reshape(-1, 1)
+y = 20 + 3 * X.ravel() + 5 * np.sin(X.ravel())
+y += np.random.normal(0, 1.5, len(X))
 
 X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.25, random_state=42
+    X, y, test_size=0.2, random_state=42
 )
 
-X_plot = np.linspace(0, 1, 200).reshape(-1, 1)
+X_plot = np.linspace(0, 10, 200).reshape(-1, 1)
 
-plt.scatter(X_train, y_train, label="Training Data")
-plt.scatter(X_test, y_test, label="Testing Data")
-
-for degree in [2, 15]:
+for degree in [1, 3, 12]:
     model = make_pipeline(
         PolynomialFeatures(degree),
         LinearRegression()
@@ -42,9 +39,10 @@ for degree in [2, 15]:
     plt.plot(X_plot, model.predict(X_plot),
              label=f"Degree {degree}")
 
-plt.xlabel("X")
-plt.ylabel("Y")
-plt.title("Polynomial Regression: Overfitting Analysis")
+plt.scatter(X, y, label="Actual Temperature")
+plt.xlabel("Time")
+plt.ylabel("Temperature")
+plt.title("Temperature Prediction Comparison")
 plt.legend()
 plt.grid(True)
 plt.show()
